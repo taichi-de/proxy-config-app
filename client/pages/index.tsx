@@ -34,13 +34,11 @@ const Home: NextPage = () => {
     };
   }, [value]);
 
-  // ---- modal ----
   const [visible, setVisible] = useState(false);
 
   const openModal = () => setVisible(true);
 
   const closeModal = () => setVisible(false);
-  // ---- modal close ----
 
   const uploadToClient = (e: any) => {
     const f = e.target.files[0];
@@ -49,14 +47,11 @@ const Home: NextPage = () => {
     }
   };
 
+  // TODO: set the upload function
   const uploadToServer = () => {
     const body = new FormData();
     if (!file) return;
     body.append("file", file);
-    // const response = await fetch("/api/rest", {
-    //   method: "POST",
-    //   body,
-    // });
     axios
       .post(`/uploaded_file`, body, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -65,19 +60,6 @@ const Home: NextPage = () => {
         console.log(res);
       });
   };
-
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/", {
-  //     method: "GET", // 'POST'
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       // "Content-Type": "multipart/form-data",??
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((response) => setFile(response))
-  //     .catch((error) => console.log(error));
-  // }, []);
 
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
     noClick: true,
@@ -147,12 +129,6 @@ const Home: NextPage = () => {
               </Text>
             </Modal.Header>
             <Modal.Body>
-              {/* <input
-                type="file"
-                name="selectFile"
-                aria-label="selectFile"
-                onChange={uploadToClient}
-              /> */}
               <div className={styles.droparea}>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
@@ -192,6 +168,7 @@ const Home: NextPage = () => {
           </Modal>
           <Spacer y={1.5} />
           <Row justify="center">
+            {/* TODO: set the upload button */}
             <form onSubmit={uploadToServer}>
               <input
                 type="file"

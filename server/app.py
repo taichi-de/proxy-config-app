@@ -1,34 +1,3 @@
-# from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
-# from flask_migrate import Migrate
-# from flask_marshmallow import Marshmallow
-# from flask_cors import CORS
-
-
-# db = SQLAlchemy()
-# migrate = Migrate()
-# ma = Marshmallow()
-# cors = CORS()
-
-# app = Flask(__name__)
-
-# @app.route("/")
-# def hello_world():
-#     return "<p>Hello, World!</p>"
-
-# def create_app():
-#     """Application-factory pattern"""
-#     app = Flask(__name__)
-#     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-#     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-#     db.init_app(app)
-#     migrate.init_app(app, db)
-#     ma.init_app(app)
-#     cors.init_app(app)
-
-#     return app
-
 from flask import Flask, request, make_response, send_from_directory, jsonify
 import os
 from datetime import datetime
@@ -40,7 +9,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 UPLOAD_DIR = os.getenv('UPLOAD_DIR_PATH') # ./uploads
 
-
+# TODO:
 @app.route('/uploaded_files', methods=['POST'])
 def upload_file():
     if 'file' in request.files:
