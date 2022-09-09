@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useEffect, useMemo, useState } from "react";
+import { MouseEventHandler, useEffect, useMemo, useState } from "react";
 import {
   Container,
   Row,
@@ -18,7 +18,7 @@ import styles from "../styles/Home.module.css";
 import axios from "axios";
 
 const Home: NextPage = () => {
-  const [file, setFile] = useState<string | Blob>();
+  // -- Validierung des Input Feldes (NextUI) --
   const { value, bindings } = useInput("");
 
   const validateIP = (value: string) => {
@@ -33,34 +33,40 @@ const Home: NextPage = () => {
       color: isValid ? "success" : "error",
     };
   }, [value]);
+  // -- Validierung des Input Feldes (NextUI) --
 
+  // -- Modal (NextUI) --
   const [visible, setVisible] = useState(false);
 
   const openModal = () => setVisible(true);
 
   const closeModal = () => setVisible(false);
+  // -- Modal (NextUI) --
 
   const uploadToClient = (e: any) => {
-    const f = e.target.files[0];
-    if (e.target.files && e.target.files[0]) {
-      setFile(f);
-    }
+    let url = "https://localhost:5000/restapi/upload";
+    let file = e.target.files[0];
+    uploadToServer(url, file);
   };
 
-  // TODO: set the upload function
-  const uploadToServer = () => {
-    const body = new FormData();
-    if (!file) return;
-    body.append("file", file);
+  const uploadToServer = (url: string, file: string | Blob) => {
+    let formData = new FormData();
+    formData.append("file", file);
     axios
-      .post(`/uploaded_file`, body, {
-        headers: { "Content-Type": "multipart/form-data" },
+      .post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then((res) => {
-        console.log(res);
+        console.log({ res });
+      })
+      .catch((err) => {
+        console.error({ err });
       });
   };
 
+  // -- react-dropzone_api --
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
     noClick: true,
     noKeyboard: true,
@@ -70,6 +76,7 @@ const Home: NextPage = () => {
       "text/cer": [".cer"],
     },
   });
+  // -- react-dropzone_api --
 
   return (
     <Container>
@@ -134,8 +141,10 @@ const Home: NextPage = () => {
                   <input {...getInputProps()} />
                   <button
                     className={styles.selectBtn}
+                    aria-label="select a file"
                     onClick={open}
-                    onChange={uploadToClient}
+                    // onChange={uploadToClient} ??
+                    onChange={(e) => uploadToClient(e)}
                   >
                     select 1 File
                   </button>
@@ -168,31 +177,23 @@ const Home: NextPage = () => {
           </Modal>
           <Spacer y={1.5} />
           <Row justify="center">
-            {/* TODO: set the upload button */}
-            <form onSubmit={uploadToServer}>
-              <input
-                type="file"
-                name="file"
-                accept=".cer"
-                onChange={(e) => uploadToClient(e)}
-              />
-              {validateIP(value) && acceptedFiles[0] != null ? (
-                <Button
-                  aria-label="send"
-                  color="success"
-                  type="submit"
-                  auto
-                  shadow
-                  // onClick={uploadToServer}
-                >
-                  Send
-                </Button>
-              ) : (
-                <Button aria-label="send" disabled auto shadow>
-                  Send
-                </Button>
-              )}
-            </form>
+            {/* FIXME: */}
+            {validateIP(value) && acceptedFiles[0] != null ? (
+              <Button
+                aria-label="send"
+                color="success"
+                type="submit"
+                auto
+                shadow
+                onClick={uploadToServer}
+              >
+                Send
+              </Button>
+            ) : (
+              <Button aria-label="send" disabled auto shadow>
+                Send
+              </Button>
+            )}
           </Row>
           {/* TODO: Loading button */}
           {/* ):( */}
