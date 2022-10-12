@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { MouseEventHandler, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Container,
   Row,
@@ -15,6 +15,7 @@ import {
 import { useDropzone, FileWithPath } from "react-dropzone";
 import { AiFillFileText } from "react-icons/ai";
 import styles from "../styles/Home.module.css";
+import FormData from "form-data";
 import axios from "axios";
 
 const Home: NextPage = () => {
@@ -44,22 +45,17 @@ const Home: NextPage = () => {
   // -- Modal (NextUI) --
 
   const uploadToClient = (e: any) => {
-    let url = "https://localhost:5000/restapi/upload";
     let file = e.target.files[0];
-    uploadToServer(url, file);
+    uploadToServer(file);
   };
 
-  const uploadToServer = (url: string, file: string | Blob) => {
+  const uploadToServer = (file: string | Blob): void => {
     let formData = new FormData();
     formData.append("file", file);
     axios
-      .post(url, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        console.log({ res });
+      .post("http://localhost:5000/restapi/upload", formData)
+      .then((file) => {
+        console.log({ file });
       })
       .catch((err) => {
         console.error({ err });
@@ -82,6 +78,7 @@ const Home: NextPage = () => {
     <Container>
       <Row justify="center">
         <Col>
+          {" "}
           <Spacer y={10} />
           {/* FIXME: it works, but muss be fixed */}
           <Input
@@ -125,7 +122,6 @@ const Home: NextPage = () => {
           </Row>
           <Modal
             width="600px"
-            closeButton
             aria-labelledby="modal-title"
             open={visible}
             onClose={closeModal}
@@ -186,6 +182,7 @@ const Home: NextPage = () => {
                 auto
                 shadow
                 onClick={uploadToServer}
+                // onClick={() => uploadToServer}
               >
                 Send
               </Button>
