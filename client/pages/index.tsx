@@ -113,6 +113,7 @@ const Home: NextPage = () => {
             </Card>
             <Button
               aria-label="select"
+              // onChange={uploadToClient} ??
               color="warning"
               auto
               onClick={openModal}
@@ -139,7 +140,6 @@ const Home: NextPage = () => {
                     className={styles.selectBtn}
                     aria-label="select a file"
                     onClick={open}
-                    // onChange={uploadToClient} ??
                     onChange={(e) => uploadToClient(e)}
                   >
                     select 1 File
