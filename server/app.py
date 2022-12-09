@@ -20,13 +20,3 @@ def upload_file():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-# -- Start flask -- 
-# . venv/bin/activate
-# flask run
-
-# -- dummy IPAdress --
-# 111.11.11.111:11
-
-# Afgb2: Imprementation des Befehls der Kocktail rezepte
